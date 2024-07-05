@@ -2,11 +2,11 @@ package database
 
 import (
 	"fmt"
+	"gorm.io/driver/postgres"
 	"log"
 	"os"
 	"tcpserver/models"
 
-	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
