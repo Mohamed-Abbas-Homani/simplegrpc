@@ -3,18 +3,13 @@ package database
 import (
 	"fmt"
 	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 	"log"
 	"os"
 	"tcpserver/models"
-
-	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 )
 
-var DB *gorm.DB
-
-func InitDB() {
-	var err error
+func InitDB() *gorm.DB {
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
 		os.Getenv("DB_HOST"),
 		os.Getenv("DB_USER"),
@@ -23,16 +18,15 @@ func InitDB() {
 		os.Getenv("DB_PORT"),
 	)
 
-	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Info),
-	})
+	DB, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatalf("failed to connect database: %v", err)
 	}
-	err = DB.AutoMigrate(&models.User{})
+	err = DB.AutoMigrate(&models.Organization{}, &models.UserDetail{}, &models.User{}, &models.Role{})
 	if err != nil {
-		return
+		return nil
 	}
-
 	log.Println("Database connected")
+	models.Seed(DB)
+	return DB
 }

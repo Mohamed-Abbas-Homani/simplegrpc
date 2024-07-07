@@ -5,14 +5,18 @@ option go_package = "./proto";
 service MyApp {
   rpc GetUser (GetUserRequest) returns (GetUserResponse);
   rpc CreateUser (CreateUserRequest) returns (CreateUserResponse);
+  rpc UpdateUser (UpdateUserRequest) returns (UpdateUserResponse);
+  rpc DeleteUser (DeleteUserRequest) returns (DeleteUserResponse);
+  rpc GetUsers (GetUsersRequest) returns (GetUsersResponse);
+  rpc GetFullUser (GetFullUserRequest) returns (GetFullUserResponse);
 }
 
 message GetUserRequest {
-  string id = 1;
+  uint64 id = 1;
 }
 
 message GetUserResponse {
-  string id = 1;
+  uint64 id = 1;
   string username = 2;
   string email = 3;
 }
@@ -21,8 +25,68 @@ message CreateUserRequest {
   string username = 1;
   string email = 2;
   string password = 3;
+  uint64 organization_id = 4;
 }
 
 message CreateUserResponse {
-  string id = 1;
+  uint64 id = 1;
+}
+
+message UpdateUserRequest {
+  uint64 id = 1 ;
+  string username = 2;
+  string email = 3;
+  string password = 4;
+  uint64 organization_id = 5;
+}
+
+message UpdateUserResponse {
+  uint64 id = 1;
+}
+
+message DeleteUserRequest {
+  uint64 id = 1;
+}
+
+message DeleteUserResponse {
+  uint64 id = 1;
+}
+
+message GetUsersRequest {}
+
+message GetUsersResponse {
+  repeated User users = 1;
+}
+
+message GetFullUserRequest {
+  uint64 id = 1;
+}
+
+message GetFullUserResponse {
+  uint64 id = 1;
+  string username = 2;
+  string email = 3;
+  UserDetail user_detail = 4;
+  repeated Role roles = 5;
+  Organization organization = 6;
+}
+
+message User {
+  uint64 id = 1;
+  string username = 2;
+  string email = 3;
+}
+
+message UserDetail {
+  string full_name = 1;
+  string bio = 2;
+  string phone_number = 3;
+}
+
+message Role {
+  string name = 1;
+}
+
+message Organization {
+  string name = 1;
 }

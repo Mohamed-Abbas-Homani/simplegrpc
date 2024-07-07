@@ -9,18 +9,18 @@ import (
 	"net"
 	db "tcpserver/database"
 	"tcpserver/proto"
+	"tcpserver/repository"
 	"tcpserver/service"
 )
 
-func init() {
+func main() {
+
 	if err := godotenv.Load(); err != nil {
 		log.Println("No .env file found")
 	}
-	db.InitDB()
-}
-func main() {
+	DB := db.InitDB()
 	grpcServer := grpc.NewServer()
-	proto.RegisterMyAppServer(grpcServer, &service.Server{})
+	proto.RegisterMyAppServer(grpcServer, &service.Server{UserRepo: &repository.UserRepositoryImpl{DB: DB}})
 	reflection.Register(grpcServer)
 	lis, err := net.Listen("tcp", ":50051")
 	if err != nil {
